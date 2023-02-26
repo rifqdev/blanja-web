@@ -1,0 +1,16 @@
+.category .swiper {
+  height: 11rem;
+}
+
+.category .swiper-wrapper {
+  gap: 20px;
+}
+
+.category .swiper-pagination-bullet-active {
+  width: 2rem;
+  border-radius: 4px;
+}
+
+.swiper-pagination-bullets.swiper-pagination-horizontal {
+  left: 0;
+}

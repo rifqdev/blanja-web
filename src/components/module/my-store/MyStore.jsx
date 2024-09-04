@@ -49,8 +49,8 @@ const MyStore = ({
                 id="nama"
                 className="border p-3 rounded-md focus:outline-none w-8/12 ml-auto shadow-md"
                 placeholder="Name"
-                name="storeName"
-                values={values.storeName}
+                name="store_name"
+                values={values.store_name}
                 onChange={handleChange}
               />
             </div>
@@ -77,8 +77,8 @@ const MyStore = ({
                 id="phone"
                 className="border p-3 rounded-md focus:outline-none w-8/12 ml-auto shadow-md"
                 placeholder="Phone Number"
-                name="phoneNumber"
-                values={values.phoneNumber}
+                name="phone_number"
+                values={values.phone_number}
                 onChange={handleChange}
               />
             </div>
@@ -90,8 +90,8 @@ const MyStore = ({
                 cols="27"
                 rows="4"
                 className="border focus:outline-none shadow-md p-3"
-                name="storeDescription"
-                value={values.storeDescription}
+                name="store_description"
+                value={values.store_description}
                 onChange={handleChange}
               ></textarea>
             </div>

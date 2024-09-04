@@ -22,21 +22,34 @@ const SellingProduct = ({ id }) => {
 
     for (let i = 0; i < 5; i++) {
       const file = files[i];
-      photos.push(file);
+      // photos.push(file);
 
-      const reader = new FileReader();
+      // const reader = new FileReader();
+      // reader.onloadend = () => {
+      //   newPreviews.push(reader.result);
+      //   if (newPreviews.length === files.length) {
+      //     setPreviews(newPreviews);
+      //   }
+      // };
 
-      reader.onloadend = () => {
-        newPreviews.push(reader.result);
-        if (newPreviews.length === files.length) {
-          setPreviews(newPreviews);
-        }
-      };
+      // reader.readAsDataURL(file);
 
-      reader.readAsDataURL(file);
+      if (file) {
+        photos.push(file);
+  
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          newPreviews.push(reader.result);
+          if (newPreviews.length === photos.length) {
+            setPreviews(newPreviews);
+          }
+        };
+  
+        reader.readAsDataURL(file);
+      }
     }
     setPhoto(photos);
-  };
+  };  
 
   const handleRemove = (index) => {
     setPreviews((prevPreviews) => {
@@ -69,7 +82,7 @@ const SellingProduct = ({ id }) => {
     size: "",
     condition: "",
     description: "",
-    categoryId: "",
+    category_id: "",
   });
   const [description, setDescription] = useState("");
 
@@ -96,7 +109,7 @@ const SellingProduct = ({ id }) => {
     formData.append("condition", data.condition);
     formData.append("description", clean);
     formData.append("sellerId", id);
-    formData.append("categoryId", data.categoryId);
+    formData.append("category_id", data.category_id);
     photo.map((item) => {
       formData.append("photo", item);
     });
@@ -110,7 +123,7 @@ const SellingProduct = ({ id }) => {
       size: "",
       condition: "",
       description: "",
-      categoryId: "",
+      category_id: "",
     });
     setDescription("");
     setPhoto(null);
@@ -139,8 +152,8 @@ const SellingProduct = ({ id }) => {
             />
             <div>
               <select
-                name="categoryId"
-                values={data.categoryId}
+                name="category_id"
+                values={data.category_id}
                 onChange={handleChange}
               >
                 <option>Category</option>

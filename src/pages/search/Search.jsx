@@ -12,11 +12,12 @@ const Search = () => {
   const [data, setData] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPage, setTotalPage] = useState(0);
+  const [loading, setLoading] = useState(true);
 
   const { items } = useSelector((state) => state.product);
 
   useEffect(() => {
-    dispatch(getSearch({ searchParams, setData, setTotalPage, currentPage }));
+    dispatch(getSearch({ searchParams, setData, setTotalPage, currentPage, setLoading}));
   }, [searchParams, dispatch, currentPage]);
   const pageNumber = [];
   for (let i = 1; i <= totalPage; i++) {
@@ -35,23 +36,24 @@ const Search = () => {
       <Navbar />
       {data.length === 0 ? (
         <div className="mt-44 w-11/12 mx-auto">
-          <p className="text-slate-600 text-3xl font-medium my-20 text-center">
+          {loading ? <p className="text-slate-600 text-3xl font-medium my-20 text-center">
+            Loading data
+          </p>: <p className="text-slate-600 text-3xl font-medium my-20 text-center">
             Opps.. Product tidak tersedia
-          </p>
+          </p>}
           <hr className="border-2 border-dashed mb-20 border-gray-500" />
           <div
             className="mt-3 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-5"
             data-aos="fade-up"
           >
             {items?.map((item, index) => {
-              const photo = item.photo0.split(",");
-              const linkPhoto = photo[photo.length - 1];
               return (
                 <Card
+                  id={item.id}
                   name={item.name}
                   price={item.price}
                   store={item.storename}
-                  img={linkPhoto}
+                  img={item.photo[0]}
                   key={index}
                 />
               );
@@ -65,16 +67,14 @@ const Search = () => {
             data-aos="fade-up"
           >
             {data?.map((item, index) => {
-              const photo = item.photo0.split(",");
-              const linkPhoto = photo[photo.length - 1];
               return (
                 <Card
                   name={item.name}
                   price={item.price}
                   store={item.storename}
-                  img={linkPhoto}
+                  img={item.photo[0]}
                   key={index}
-                  id={item.id_product}
+                  id={item.id}
                 />
               );
             })}

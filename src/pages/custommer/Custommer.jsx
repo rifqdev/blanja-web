@@ -12,32 +12,29 @@ import { useNavigate } from "react-router-dom";
 import jwt_decode from "jwt-decode";
 import { useDispatch, useSelector } from "react-redux";
 import { useFormik } from "formik";
-import {
-  editCustomer,
-  getCustomer,
-} from "../../config/features/auth/authSlice";
+import { editCustomer, getCustomer } from "../../config/features/auth/authSlice";
 import { ToastContainer, toast } from "react-toastify";
 import { getOrder } from "../../config/features/order/orderSlice";
 
 const Custommer = () => {
-  const token = localStorage.getItem("token");
-  const { id } = jwt_decode(token);
+  const token = localStorage.getItem("access");
+  const decoded = jwt_decode(token);
+  const id = decoded.userId;
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [photo, setPhoto] = useState(null);
   const [activeTab, setActiveTab] = useState("tab1");
-  let myBirth;
   const { customer } = useSelector((state) => state.auth);
-  myBirth = customer[0]?.birth?.split(" ");
+  let myBirth = customer?.birth;
+
+  myBirth = myBirth && customer?.birth?.split(" ");
   const [birt, setBirth] = useState({
     day: myBirth ? myBirth[0] : "",
     month: myBirth ? myBirth[1] : "",
     year: myBirth ? myBirth[2] : "",
   });
-
-  // console.log(myBirth[0]);
 
   const handleBirth = (e) => {
     setBirth({
@@ -65,16 +62,16 @@ const Custommer = () => {
   const formData = new FormData();
   const { values, handleChange, handleSubmit } = useFormik({
     initialValues: {
-      name: customer[0].name,
-      email: customer[0].email,
-      phoneNumber: customer[0].phonenumber,
-      gender: customer[0].gender,
-      birth: customer[0].birth,
+      name: customer.name,
+      email: customer.email,
+      phoneNumber: customer.phone_number,
+      gender: customer.gender,
+      birth: customer.birth,
     },
     onSubmit: () => {
       formData.append("name", values.name);
       formData.append("email", values.email);
-      formData.append("phoneNumber", values.phoneNumber);
+      formData.append("phone_number", values.phoneNumber);
       formData.append("gender", values.gender);
       formData.append("birth", newBirth);
       formData.append("photo", photo);
@@ -84,7 +81,7 @@ const Custommer = () => {
   });
   let imgProfile;
   if (customer.length !== 0) {
-    const imgLink = customer[0]?.photo?.split(",");
+    const imgLink = customer?.photo?.split(",");
     if (imgLink) {
       imgProfile = imgLink[imgLink?.length - 1];
     }
@@ -97,50 +94,30 @@ const Custommer = () => {
         <div className="mt-32">
           <div className="w-9/12 ml-5 lg:ml-auto">
             <div className="flex gap-3 items-center">
-              <img
-                src={imgProfile ? imgProfile : img}
-                alt="profile-icon"
-                className="w-16 h-16 rounded-full object-cover"
-              />
+              <img src={imgProfile ? imgProfile : img} alt="profile-icon" className="w-16 h-16 rounded-full object-cover" />
               <div>
-                <p className="text-lg font-medium">{customer[0].name}</p>
+                <p className="text-lg font-medium">{customer.name}</p>
               </div>
             </div>
 
             <div className="mt-12 flex lg:flex-col gap-5 text-xl text-slate-500 overflow-auto flex-wrap mb-10">
               <div
-                className={
-                  activeTab === "tab1"
-                    ? "flex gap-3 cursor-pointer text-black"
-                    : "flex gap-3 cursor-pointer"
-                }
+                className={activeTab === "tab1" ? "flex gap-3 cursor-pointer text-black" : "flex gap-3 cursor-pointer"}
                 onClick={() => setActiveTab("tab1")}
               >
-                <img
-                  src={imyaccount}
-                  alt="my-account-icon"
-                  className="w-8 h-8 "
-                />
+                <img src={imyaccount} alt="my-account-icon" className="w-8 h-8 " />
 
                 <p className="hidden sm:block">My account</p>
               </div>
               <div
-                className={
-                  activeTab === "tab2"
-                    ? "flex gap-3 cursor-pointer text-black"
-                    : "flex gap-3 cursor-pointer"
-                }
+                className={activeTab === "tab2" ? "flex gap-3 cursor-pointer text-black" : "flex gap-3 cursor-pointer"}
                 onClick={() => setActiveTab("tab2")}
               >
                 <img src={imaps} alt="maps-icon" />
                 <p className="hidden sm:block">Shipping address</p>
               </div>
               <div
-                className={
-                  activeTab === "tab3"
-                    ? "flex gap-3 cursor-pointer text-black"
-                    : "flex gap-3 cursor-pointer"
-                }
+                className={activeTab === "tab3" ? "flex gap-3 cursor-pointer text-black" : "flex gap-3 cursor-pointer"}
                 onClick={() => setActiveTab("tab3")}
               >
                 <img src={imyorder} alt="my-order-icon" />
@@ -168,7 +145,7 @@ const Custommer = () => {
             />
           )}
           {activeTab === "tab2" && <MyAddress />}
-          {activeTab === "tab3" && <MyOrder id={id} />}
+          {activeTab === "tab3" && <MyOrder  />}
         </div>
       </div>
     </>

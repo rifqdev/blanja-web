@@ -16,9 +16,9 @@ const Checkout = () => {
   const navigate = useNavigate();
   const [showModal, setShowModal] = useState(false);
 
-  const token = localStorage.getItem("token");
-  const { id } = jwt_decode(token);
-
+  const token = localStorage.getItem("access");
+  const { userId } = jwt_decode(token);
+  const id = userId;
   const { items } = useSelector((state) => state.cart);
   const { primary } = useSelector((state) => state.customer);
 
@@ -29,7 +29,7 @@ const Checkout = () => {
   useEffect(() => {
     window.scrollTo(0, 0);
     dispatch(getCart(id));
-    dispatch(getAddressPrimary(id));
+    dispatch(getAddressPrimary());
   }, [dispatch, id]);
 
   useEffect(() => {
@@ -39,37 +39,26 @@ const Checkout = () => {
   const delivery = 5;
   let total = null;
   for (let i = 0; i < items.length; i++) {
-    const productPrice = items[i].total_price * items[i].total_quantity;
+    const productPrice = items[i].price;
     total += productPrice;
   }
+
   return (
     <>
       <Navbar />
       <ToastContainer autoClose={3000} />
       <div className="grid lg:grid-cols-3 gap-5 w-11/12 mx-auto my-32">
-        <ModalPayment
-          visible={showModal}
-          onClose={handleCloseModal}
-          total={total}
-          delivery={delivery}
-          id={id}
-          toast={toast}
-        />
+        <ModalPayment visible={showModal} onClose={handleCloseModal} total={total} delivery={delivery} toast={toast} />
         <div className="lg:col-span-2" data-aos="fade-right">
           <h1 className="text-3xl font-bold">Checkout</h1>
           {items.length === 0 && (
             <>
-              <p className="mt-32 text-center text-slate-500 text-2xl">
-                No product in cart, please insert firts
-              </p>
+              <p className="mt-32 text-center text-slate-500 text-2xl">No product in cart, please insert firts</p>
             </>
           )}
           {!primary && (
             <>
-              <p className="mt-5 text-center text-slate-500 text-2xl">
-                No address set, please select or add new address in profile
-                first
-              </p>
+              <p className="mt-5 text-center text-slate-500 text-2xl">No address set, please select or add new address in profile first</p>
             </>
           )}
           <div>
@@ -77,12 +66,12 @@ const Checkout = () => {
               <>
                 <h5 className="text-xl mb-2 mt-5">Shipping Address</h5>
                 <Address
-                  primaryaddress={primary?.primaryaddress}
-                  recipientname={primary?.recipientname}
-                  recipientphonenumber={primary?.recipientphonenumber}
-                  fulladdress={primary?.fulladdress}
+                  primaryaddress={primary?.primary_address}
+                  recipientname={primary?.recipient_name}
+                  recipientphonenumber={primary?.recipient_phone_number}
+                  fulladdress={primary?.full_address}
                   city={primary?.city}
-                  poscode={primary?.poscode}
+                  poscode={primary?.pos_code}
                   onClick={() => navigate("/customer")}
                   name="Choose another address"
                   className="border-2 py-2 px-6 rounded-full text-gray-500 hover:bg-slate-200 transition-all mt-10"
@@ -92,16 +81,15 @@ const Checkout = () => {
           </div>
           <div className="mt-10 flex flex-col gap-5">
             {items.map((item, index) => {
-              const photo = item.photo.split(",");
-              const linkPhoto = photo[photo.length - 1];
+              const photo = item.product.photo[0];
               return (
                 <Fragment key={index}>
                   <CardShipping
-                    photo={linkPhoto}
-                    name={item.product_name}
-                    price={`$ ${item.total_price}`}
-                    storename={item.storename}
-                    total={`${item.total_quantity}x`}
+                    photo={photo}
+                    name={item.product.name}
+                    price={`$ ${item.product.price}`}
+                    storename={item.product.user.store_name}
+                    total={`${item.quantity}x`}
                   />
                 </Fragment>
               );

@@ -13,17 +13,15 @@ const MyOrder = () => {
           <span>({items.length})</span>
         </div>
         <hr className="mt-1" />
-        {items.map((item, index) => {
-          const photo = item.products[0].photo.split(",");
-          const linkPhoto = photo[photo.length - 1];
-
+        {items.map((order, index) => {
+          console.log(order)
           return (
             <Fragment key={index}>
               <CardShipping
-                photo={linkPhoto}
-                name={item.products[0].name}
-                price={`total item ${item.products.length}`}
-                total={`$ ${item.totalprice}`}
+                photo={order.products[0].product_photo[0]}
+                name={order.products[0].product_name}
+                price={`total item ${order.products.length}`}
+                total={`$ ${order.order_price}`}
               />
             </Fragment>
           );

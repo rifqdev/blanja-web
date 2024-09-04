@@ -5,7 +5,12 @@ export const addAddress = createAsyncThunk(
   "address/addAddress",
   async ({ values, toast }) => {
     try {
-      const result = await api.post("/address", values);
+      const token = localStorage.getItem('access'); // Ambil token dari localStorage
+      const result = await api.post("/address", values, {
+        headers: {
+          Authorization: `Bearer ${token}`, // Sertakan token dalam header Authorization
+        },
+      });
       toast.success(result.data.message);
       return result.data.message;
     } catch (error) {
@@ -16,9 +21,14 @@ export const addAddress = createAsyncThunk(
 
 export const getAllAddress = createAsyncThunk(
   "address/getAllAddress",
-  async (idCustomer) => {
+  async () => {
     try {
-      const result = await api.get(`/address/${idCustomer}`);
+      const token = localStorage.getItem('access'); // Ambil token dari localStorage
+      const result = await api.get('/address', {
+        headers: {
+          Authorization: `Bearer ${token}`, // Sertakan token dalam header Authorization
+        },
+      });
       return result.data.data;
     } catch (error) {
       console.log(error);
@@ -28,9 +38,14 @@ export const getAllAddress = createAsyncThunk(
 
 export const setPrimaryAddress = createAsyncThunk(
   "address/setPrimaryAddress",
-  async ({ data, toast, setLoading }) => {
+  async ({ data, toast, setLoading, id }) => {
     try {
-      const result = await api.post(`/address/chose-address`, data);
+      const token = localStorage.getItem('access'); // Ambil token dari localStorage
+      const result = await api.put(`/address/primary/${id}`, data, {
+        headers: {
+          Authorization: `Bearer ${token}`, // Sertakan token dalam header Authorization
+        },
+      });
       toast.success(result.data.message);
       setLoading(false);
       return result.data.message;
@@ -43,10 +58,15 @@ export const setPrimaryAddress = createAsyncThunk(
 
 export const getAddressPrimary = createAsyncThunk(
   "address/getAddressPrimary",
-  async (id) => {
+  async () => {
     try {
-      const result = await api.get(`/address/primary/${id}`);
-      return result.data.data[0];
+      const token = localStorage.getItem('access'); // Get the token from localStorage
+      const result = await api.get('/address/primary', {
+        headers: {
+          Authorization: `Bearer ${token}`, // Include the token in the Authorization header
+        },
+      });
+      return result.data.data;
     } catch (error) {
       console.log(error);
     }

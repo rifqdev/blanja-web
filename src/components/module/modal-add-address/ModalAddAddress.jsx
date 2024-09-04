@@ -10,14 +10,13 @@ const ModalAddAddress = ({ visible, onClose, toast, id }) => {
 
   const { values, handleChange, handleReset, handleSubmit } = useFormik({
     initialValues: {
-      addressAs: "",
-      recipientName: "",
-      recipientPhoneNumber: "",
-      fullAddress: "",
+      address_as: "",
+      recipient_name: "",
+      recipient_phone_number: "",
+      full_address: "",
       city: "",
-      poscode: "",
-      setPrimary: false,
-      customerId: id,
+      pos_code: "",
+      primary_address: false,
     },
     onSubmit: () => {
       dispatch(addAddress({ values, toast }));
@@ -41,8 +40,8 @@ const ModalAddAddress = ({ visible, onClose, toast, id }) => {
             type="text"
             className="border p-3 rounded-md w-full focus:outline-none"
             placeholder="Home"
-            name="addressAs"
-            values={values.addressAs}
+            name="address_as"
+            values={values.address_as}
             onChange={handleChange}
           />
         </div>
@@ -54,8 +53,8 @@ const ModalAddAddress = ({ visible, onClose, toast, id }) => {
               type="text"
               className="border p-3 rounded-md w-full focus:outline-none"
               placeholder="Fullname"
-              name="recipientName"
-              values={values.recipientName}
+              name="recipient_name"
+              values={values.recipient_name}
               onChange={handleChange}
             />
           </div>
@@ -65,8 +64,8 @@ const ModalAddAddress = ({ visible, onClose, toast, id }) => {
               type="text"
               className="border p-3 rounded-md w-full focus:outline-none"
               placeholder="Phone number"
-              name="recipientPhoneNumber"
-              values={values.recipientPhoneNumber}
+              name="recipient_phone_number"
+              values={values.recipient_phone_number}
               onChange={handleChange}
             />
           </div>
@@ -90,8 +89,8 @@ const ModalAddAddress = ({ visible, onClose, toast, id }) => {
               type="text"
               className="border p-3 rounded-md w-full focus:outline-none"
               placeholder="Pos code"
-              name="poscode"
-              values={values.poscode}
+              name="pos_code"
+              values={values.pos_code}
               onChange={handleChange}
             />
           </div>
@@ -103,8 +102,8 @@ const ModalAddAddress = ({ visible, onClose, toast, id }) => {
             type="text"
             className="border p-3 rounded-md w-full focus:outline-none"
             placeholder="Full address"
-            name="fullAddress"
-            values={values.fullAddress}
+            name="full_address"
+            values={values.full_address}
             onChange={handleChange}
           />
         </div>
@@ -114,8 +113,8 @@ const ModalAddAddress = ({ visible, onClose, toast, id }) => {
             type="checkbox"
             id="primary"
             className="w-6 h-6"
-            name="setPrimary"
-            checked={values.setPrimary}
+            name="primary_address"
+            checked={values.primary_address}
             onChange={handleChange}
           />
           <label htmlFor="primary" className="text-gray-500">

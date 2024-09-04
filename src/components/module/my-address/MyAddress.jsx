@@ -10,7 +10,7 @@ import {
 import Address from "../address/Address";
 
 const MyAddress = () => {
-  const token = localStorage.getItem("token");
+  const token = localStorage.getItem("access");
   const { id } = jwt_decode(token);
   const dispatch = useDispatch();
   const [showModal, setShowModal] = useState(false);
@@ -23,7 +23,7 @@ const MyAddress = () => {
   };
 
   useEffect(() => {
-    dispatch(getAllAddress(id));
+    dispatch(getAllAddress());
   }, [dispatch, id, loading]);
 
   return (
@@ -54,15 +54,15 @@ const MyAddress = () => {
           };
           return (
             <Address
-              primaryaddress={item.primaryaddress}
-              recipientname={item.recipientname}
-              recipientphonenumber={item.recipientphonenumber}
-              fulladdress={item.fulladdress}
+              primaryaddress={item.primary_address}
+              recipientname={item.recipient_name	}
+              recipientphonenumber={item.recipient_phone_number	}
+              fulladdress={item.full_address	}
               city={item.city}
-              poscode={item.poscode}
+              poscode={item.pos_code}
               onClick={() => {
                 setLoading(true);
-                dispatch(setPrimaryAddress({ data, toast, setLoading }));
+                dispatch(setPrimaryAddress({ data, toast, setLoading, id: item.id }));
               }}
               name="Set primary address"
               className="text-red-600 font-medium mt-5 cursor-pointer hover:underline transition-all"

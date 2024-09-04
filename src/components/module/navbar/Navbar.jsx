@@ -8,10 +8,7 @@ import mail from "../../../asset/icon/mail.svg";
 import shopping from "../../../asset/icon/shopping-cart .svg";
 import img from "../../../asset/icon/default-profile.svg";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  getCustomer,
-  getSeller,
-} from "../../../config/features/auth/authSlice";
+import { getCustomer, getSeller } from "../../../config/features/auth/authSlice";
 import jwt_decode from "jwt-decode";
 
 const Navbar = () => {
@@ -19,19 +16,19 @@ const Navbar = () => {
   const dispatch = useDispatch();
   const [showSearch, setShowSearch] = useState(false);
   const [search, setSearch] = useState("");
-  const token = localStorage.getItem("token");
+  const token = localStorage.getItem("access");
   const chooseRole = localStorage.getItem("role");
   let id;
   if (token) {
     const getId = jwt_decode(token);
-    id = getId.id;
+    id = getId.userId;
   }
 
   const handleSearch = (e) => {
     e.preventDefault();
     navigate({
       pathname: "/search",
-      search: `?search=${search}`,
+      search: `?key=${search}`,
     });
   };
 
@@ -45,16 +42,15 @@ const Navbar = () => {
   const { customer } = useSelector((state) => state.auth);
   const { items } = useSelector((state) => state.cart);
 
-  // console.log(seller);
   if (chooseRole === "customer") {
-    if (customer[0]?.photo) {
-      const photo = customer[0].photo.split(",");
-      imgProfile = photo[1];
+    if (customer?.photo) {
+      const photo = customer.photo;
+      imgProfile = photo;
     }
   } else if (chooseRole === "seller") {
-    if (seller[0]?.photo) {
-      const photo = seller[0].photo.split(",");
-      imgProfile = photo[photo.length - 1];
+    if (seller?.photo) {
+      const photo = seller.photo;
+      imgProfile = photo;
     }
   }
 
@@ -82,51 +78,27 @@ const Navbar = () => {
               <img src={logo} alt="logo" className="h-8 " />
             </Link>
           )}
-          <label
-            htmlFor="cek"
-            className="absolute top-16 cursor-pointer shadow-md sm:hidden"
-          >
+          <label htmlFor="cek" className="absolute top-16 cursor-pointer shadow-md sm:hidden">
             <div className="bg-slate-700 h-0.5 w-6 mt-1"></div>
             <div className="bg-slate-700 h-0.5 w-6 mt-1"></div>
             <div className="bg-slate-700 h-0.5 w-6 mt-1"></div>
           </label>
         </div>
-        <img
-          src={searchIcon}
-          alt="search-icon"
-          className="lg:hidden w-8"
-          onClick={handleCariClick}
-        />
-        <div
-          className={`border py-2 pl-3 relative w-[25rem] lg:w-[30rem] rounded-full lg:block ${
-            showSearch ? "" : "hidden"
-          }`}
-        >
+        <img src={searchIcon} alt="search-icon" className="lg:hidden w-8" onClick={handleCariClick} />
+        <div className={`border py-2 pl-3 relative w-[25rem] lg:w-[30rem] rounded-full lg:block ${showSearch ? "" : "hidden"}`}>
           <form onSubmit={handleSearch}>
-            <input
-              type="search"
-              placeholder="Search"
-              className="focus:outline-none w-10/12"
-              onChange={(e) => setSearch(e.target.value)}
-            />
+            <input type="search" placeholder="Search" className="focus:outline-none w-10/12" onChange={(e) => setSearch(e.target.value)} />
             <div
               className="bg-gray-200 w-7 absolute top-0 w-[48px] h-[40px] right-0 rounded-r-full p-2 hover:bg-gray-300 transition-all cursor-pointer"
               onClick={handleSearch}
             >
-              <img
-                src={searchIcon}
-                alt="search-icon"
-                className="w-8 absolute right-[10px] top-1"
-              />
+              <img src={searchIcon} alt="search-icon" className="w-8 absolute right-[10px] top-1" />
             </div>
           </form>
         </div>
         <input type="checkbox" id="cek" className="peer hidden" />
         <div className="flex flex-col lg:grow items-center sm:justify-around gap-5 absolute left-0 top-0 -translate-x-[33rem] peer-checked:translate-x-0 transition duration-500 h-screen bg-white shadow-2xl w-10/12 p-5 sm:translate-x-0 sm:w-auto sm:flex-row sm:static sm:h-auto sm:bg-inherit sm:shadow-none z-50">
-          <label
-            htmlFor="cek"
-            className="absolute top-6 cursor-pointer text-2xl right-6 sm:hidden"
-          >
+          <label htmlFor="cek" className="absolute top-6 cursor-pointer text-2xl right-6 sm:hidden">
             X
           </label>
 
@@ -137,7 +109,7 @@ const Navbar = () => {
                   <div className="relative">
                     <img src={shopping} alt="shop" />
                     <div className="absolute bg-red-600 text-white px-1.5 rounded-full text-sm -top-2 -right-4">
-                      <p>{items.length}</p>
+                      <p>{items && items.length}</p>
                     </div>
                   </div>
                   <p className="sm:hidden">Cart</p>
@@ -155,26 +127,16 @@ const Navbar = () => {
                 </div>
                 <p className="sm:hidden">Chats</p>
               </div>
-              <div
-                className="flex gap-2 cursor-pointer "
-                onClick={navigateProfile}
-              >
+              <div className="flex gap-2 cursor-pointer " onClick={navigateProfile}>
                 <div>
-                  <img
-                    src={imgProfile ? imgProfile : img}
-                    alt="img"
-                    className="w-8 h-8 rounded-full object-cover"
-                  />
+                  <img src={imgProfile ? imgProfile : img} alt="img" className="w-8 h-8 rounded-full object-cover" />
                 </div>
                 <p className="sm:hidden">Profile</p>
               </div>
             </div>
           ) : (
             <div className="flex gap-5 flex-col mt-24 sm:flex-row sm:mt-0">
-              <Link
-                to="/login"
-                className="bg-red-600 text-white w-24 py-1.5 text-center rounded-full hover:bg-red-500 transition-all cursor-pointer"
-              >
+              <Link to="/login" className="bg-red-600 text-white w-24 py-1.5 text-center rounded-full hover:bg-red-500 transition-all cursor-pointer">
                 Login
               </Link>
               <Link

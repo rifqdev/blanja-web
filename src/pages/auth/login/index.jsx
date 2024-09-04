@@ -9,10 +9,7 @@ import { useFormik } from "formik";
 import { useDispatch } from "react-redux";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import {
-  loginCustomer,
-  loginSeller,
-} from "../../../config/features/auth/authSlice";
+import { loginCustomer, loginSeller } from "../../../config/features/auth/authSlice";
 
 const Login = () => {
   const dispatch = useDispatch();
@@ -33,12 +30,15 @@ const Login = () => {
     initialValues: {
       email: "",
       password: "",
+      account_type: "",
     },
     onSubmit: () => {
       setLoading(true);
       if (active) {
+        values.account_type = "custommer";
         dispatch(loginCustomer({ values, navigate, toast, setLoading }));
       } else {
+        values.account_type = "seller";
         dispatch(loginSeller({ values, navigate, toast, setLoading }));
       }
       handleReset();
@@ -55,20 +55,12 @@ const Login = () => {
           <div>
             <Button
               name="Custommer"
-              className={
-                active
-                  ? "border p-3 bg-[#DB3022] text-white"
-                  : "border p-3  text-[#9B9B9B]"
-              }
+              className={active ? "border p-3 bg-[#DB3022] text-white" : "border p-3  text-[#9B9B9B]"}
               onClick={() => setActive(true)}
             />
             <Button
               name="Seller"
-              className={
-                active
-                  ? "border p-3  text-[#9B9B9B]"
-                  : "border p-3 bg-[#DB3022] text-white"
-              }
+              className={active ? "border p-3  text-[#9B9B9B]" : "border p-3 bg-[#DB3022] text-white"}
               onClick={() => setActive(false)}
             />
           </div>
@@ -110,19 +102,12 @@ const Login = () => {
                 <div class="h-5 w-5 border-2 rounded-full border-l-0 border-b-0 animate-spin"></div>
               </button>
             ) : (
-              <Button
-                name="Login"
-                type="submit"
-                className="bg-[#DB3022] p-3 w-full text-white mt-5 rounded-full hover:bg-[#f43928] transition-all"
-              />
+              <Button name="Login" type="submit" className="bg-[#DB3022] p-3 w-full text-white mt-5 rounded-full hover:bg-[#f43928] transition-all" />
             )}
           </form>
           <p className="mt-10 text-center">
             Dont't have Blanja account?{" "}
-            <Link
-              to="/register"
-              className="text-red-500 hover:text-red-600 hover:underline transition-all"
-            >
+            <Link to="/register" className="text-red-500 hover:text-red-600 hover:underline transition-all">
               Register
             </Link>
           </p>

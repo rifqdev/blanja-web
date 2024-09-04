@@ -5,7 +5,12 @@ export const addOrder = createAsyncThunk(
   "order/addOrder",
   async ({ data, onClose, toast, setLoading }) => {
     try {
-      const result = await api.post(`/orders`, data);
+      const token = localStorage.getItem('access'); // Ambil token dari localStorage
+      const result = await api.post(`/order`, data, {
+        headers: {
+          Authorization: `Bearer ${token}`, // Sertakan token dalam header Authorization
+        },
+      });
       onClose();
       toast.success(result.data.message);
       setLoading(false);
@@ -16,9 +21,15 @@ export const addOrder = createAsyncThunk(
     }
   }
 );
-export const getOrder = createAsyncThunk("order/getOrder", async (id) => {
+
+export const getOrder = createAsyncThunk("order/getOrder", async (status) => {
   try {
-    const result = await api.get(`orders/${id}?deliverystatus=pending`);
+    const token = localStorage.getItem('access'); // Ambil token dari localStorage
+    const result = await api.get(`order/custommer`, {
+      headers: {
+        Authorization: `Bearer ${token}`, // Sertakan token dalam header Authorization
+      },
+    });
     return result.data.data;
   } catch (error) {
     console.log(error);

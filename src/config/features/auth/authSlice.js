@@ -1,90 +1,85 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { api } from "../../api/index";
 
-export const registerSeller = createAsyncThunk(
-  "seller/register",
-  async ({ values, navigate, toast, setLoading }) => {
-    try {
-      const result = await api.post("/auth/seller/register", values);
-      toast.success(result.data.message);
-      setTimeout(() => {
-        navigate("/login");
-      }, 2500);
-      setLoading(false);
-      return result.data.message;
-    } catch (error) {
-      setLoading(false);
-      toast.error(error.response.data.message);
-    }
+export const registerSeller = createAsyncThunk("seller/register", async ({ values, navigate, toast, setLoading }) => {
+  try {
+    const result = await api.post("/users/auth/register", values);
+    toast.success(result.data.message);
+    setTimeout(() => {
+      navigate("/login");
+    }, 2500);
+    setLoading(false);
+    return result.data.message;
+  } catch (error) {
+    setLoading(false);
+    toast.error(error.response.data.message);
   }
-);
-export const loginSeller = createAsyncThunk(
-  "seller/login",
-  async ({ values, navigate, toast, setLoading }) => {
-    try {
-      const result = await api.post("/auth/seller/login", values);
-      localStorage.setItem("token", result.data.data.token);
-      localStorage.setItem("role", result.data.data.role);
-      toast.success(result.data.message);
-      setTimeout(() => {
-        navigate("/");
-      }, 2500);
-      setLoading(false);
-      const payload = {
-        message: result.data.message,
-        role: result.data.data.role,
-      };
-      return payload;
-    } catch (error) {
-      setLoading(false);
-      toast.error(error.response.data.message);
-    }
+});
+export const loginSeller = createAsyncThunk("seller/login", async ({ values, navigate, toast, setLoading }) => {
+  try {
+    const result = await api.post("/users/auth/login", values);
+    localStorage.setItem("access", result.data.data.access_token);
+    localStorage.setItem("refresh", result.data.data.refresh_token);
+    localStorage.setItem("role", "seller");
+    toast.success(result.data.message);
+    setTimeout(() => {
+      navigate("/");
+    }, 2500);
+    setLoading(false);
+    const payload = {
+      message: result.data.message,
+      role: result.data.data.role,
+    };
+    return payload;
+  } catch (error) {
+    setLoading(false);
+    toast.error(error.response.data.message);
   }
-);
+});
 
 // customer
-export const registerCustomer = createAsyncThunk(
-  "customer/register",
-  async ({ customer, navigate, toast, setLoading }) => {
-    try {
-      const result = await api.post("/auth/customer/register", customer);
-      console.log(result);
-      toast.success(result.data.message);
-      setTimeout(() => {
-        navigate("/login");
-      }, 2500);
-      setLoading(false);
-      return result.data.message;
-    } catch (error) {
-      setLoading(false);
-      toast.error(error.response.data.message);
-    }
+export const registerCustomer = createAsyncThunk("customer/register", async ({ customer, navigate, toast, setLoading }) => {
+  try {
+    const result = await api.post("/users/auth/register", customer);
+    console.log(result);
+    toast.success(result.data.message);
+    setTimeout(() => {
+      navigate("/login");
+    }, 2500);
+    setLoading(false);
+    return result.data.message;
+  } catch (error) {
+    setLoading(false);
+    toast.error(error.response.data.message);
   }
-);
-export const loginCustomer = createAsyncThunk(
-  "customer/login",
-  async ({ values, navigate, toast, setLoading }) => {
-    try {
-      const result = await api.post("/auth/customer/login", values);
-      localStorage.setItem("token", result.data.data.token);
-      localStorage.setItem("role", "customer");
-      toast.success(result.data.message);
-      setTimeout(() => {
-        navigate("/");
-      }, 2500);
-      setLoading(false);
-      return result.data.message;
-    } catch (error) {
-      setLoading(false);
-      toast.error(error.response.data.message);
-    }
+});
+export const loginCustomer = createAsyncThunk("customer/login", async ({ values, navigate, toast, setLoading }) => {
+  try {
+    const result = await api.post("/users/auth/login", values);
+    localStorage.setItem("access", result.data.data.access_token);
+    localStorage.setItem("refresh", result.data.data.refresh_token);
+    localStorage.setItem("role", "customer");
+    toast.success(result.data.message);
+    setTimeout(() => {
+      navigate("/");
+    }, 2500);
+    setLoading(false);
+    return result.data.message;
+  } catch (error) {
+    setLoading(false);
+    toast.error(error.response.data.message);
   }
-);
+});
 
 // getProfile
 export const getSeller = createAsyncThunk("seller/getById", async (id) => {
   try {
-    const result = await api.get(`/seller/${id}`);
+    const token = localStorage.getItem('access'); // Ambil token dari localStorage
+    const result = await api.get(`/users/profile/${id}`, {
+      headers: {
+        Authorization: `Bearer ${token}`, // Sertakan token dalam header Authorization
+      },
+    });
     return result.data.data;
   } catch (error) {
     console.log(error);
@@ -92,7 +87,12 @@ export const getSeller = createAsyncThunk("seller/getById", async (id) => {
 });
 export const getCustomer = createAsyncThunk("customer/getById", async (id) => {
   try {
-    const result = await api.get(`/customer/${id}`);
+    const token = localStorage.getItem("access");
+    const result = await api.get(`/users/profile/${id}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
     return result.data.data;
   } catch (error) {
     console.log(error);
@@ -100,43 +100,41 @@ export const getCustomer = createAsyncThunk("customer/getById", async (id) => {
 });
 
 // editProfile
-export const editSeller = createAsyncThunk(
-  "seller/edit",
-  async ({ id, formData, setLoading, toast }) => {
-    try {
-      const result = await api.put(`/seller/edit/${id}`, formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
-      toast.success(result.data.message);
-      setLoading(false);
-      return result.data.message;
-    } catch (error) {
-      setLoading(false);
-      toast.error(error.response.data.message);
-    }
+export const editSeller = createAsyncThunk("seller/edit", async ({ id, formData, setLoading, toast }) => {
+  try {
+    const token = localStorage.getItem("access");
+    const result = await api.put(`/users/profile/${id}`, formData, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "multipart/form-data",
+      },
+    });
+    toast.success(result.data.message);
+    setLoading(false);
+    return result.data.message;
+  } catch (error) {
+    setLoading(false);
+    toast.error(error.response.data.message);
   }
-);
-export const editCustomer = createAsyncThunk(
-  "customer/edit",
-  async ({ id, formData, setLoading, toast }) => {
-    try {
-      const result = await api.put(`/customer/edit/${id}`, formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
-      toast.success(result.data.message);
-      setLoading(false);
-      return result.data.message;
-    } catch (error) {
-      setLoading(false);
-      toast.error(error.response.data.message);
-      // console.log(error);
-    }
+});
+export const editCustomer = createAsyncThunk("customer/edit", async ({ id, formData, setLoading, toast }) => {
+  try {
+    const token = localStorage.getItem("access");
+    const result = await api.put(`/users/profile/${id}`, formData, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "multipart/form-data",
+      },
+    });
+    toast.success(result.data.message);
+    setLoading(false);
+    return result.data.message;
+  } catch (error) {
+    setLoading(false);
+    toast.error(error.response.data.message);
+    // console.log(error);
   }
-);
+});
 
 const authSlice = createSlice({
   name: "auth",

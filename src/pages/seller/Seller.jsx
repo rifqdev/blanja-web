@@ -1,13 +1,10 @@
 import React, { useState, useEffect } from "react";
-// import cartorder from "../../asset/icon/cart-order.png";
 import Button from "../../components/base/button";
 import product from "../../asset/icon/product.png";
 import store from "../../asset/icon/store.png";
 import img from "../../asset/img/img.jpeg";
-// import AccordionOrder from "../../components/base/accordion-order/AccordionOrder";
 import AccordionProduct from "../../components/base/accordion-product/AccordionProduct";
 import AccordionStore from "../../components/base/accordion-store/AccordionStore";
-// import MyOrderSeller from "../../components/module/my-order-seller/MyOrderSeller";
 import MyProduct from "../../components/module/my-product/MyProduct";
 import MyStore from "../../components/module/my-store/MyStore";
 import Navbar from "../../components/module/navbar/Navbar";
@@ -23,21 +20,14 @@ import { getMyProduct } from "../../config/features/product/productSlice";
 const Seller = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const token = localStorage.getItem("token");
-  const { id } = jwt_decode(token);
+  const token = localStorage.getItem("access");
+  const decoded = jwt_decode(token);
+  const id = decoded.userId;
   const { seller } = useSelector((state) => state.auth);
   const [activeTab, setActiveTab] = useState("tab1");
   const [photo, setPhoto] = useState(null);
   const [loading, setLoading] = useState(false);
 
-  // console.log(seller[0].photo.split(","));
-  let imgProfile;
-  if (seller.length !== 0) {
-    const imgLink = seller[0]?.photo?.split(",");
-    if (imgLink) {
-      imgProfile = imgLink[imgLink?.length - 1];
-    }
-  }
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
@@ -55,23 +45,21 @@ const Seller = () => {
   const formData = new FormData();
   const { values, handleChange, handleSubmit } = useFormik({
     initialValues: {
-      storeName: seller[0].storename,
-      email: seller[0].email,
-      phoneNumber: seller[0].phonenumber,
-      storeDescription: seller[0].storedescription,
+      store_name: seller.store_name,
+      email: seller.email,
+      phone_number: seller.phone_number,
+      store_description: seller.store_description,
     },
     onSubmit: () => {
-      formData.append("storeName", values.storeName);
+      formData.append("store_name", values.store_name);
       formData.append("email", values.email);
-      formData.append("phoneNumber", values.phoneNumber);
-      formData.append("storeDescription", values.storeDescription);
+      formData.append("phone_number", values.phone_number);
+      formData.append("store_description", values.store_description);
       formData.append("photo", photo);
       setLoading(true);
       dispatch(editSeller({ id, formData, setLoading, toast }));
     },
   });
-
-  // console.log("seller ", values.storeDescription);
   return (
     <>
       <Navbar />
@@ -81,7 +69,7 @@ const Seller = () => {
           <div className="w-9/12 ml-5 lg:ml-auto">
             <div className="flex gap-3 items-center">
               <img
-                src={imgProfile ? imgProfile : img}
+                src={seller && seller.photo ? seller.photo : img}
                 alt="profile-icon"
                 className="w-16 h-16 rounded-full object-cover"
               />
@@ -132,7 +120,7 @@ const Seller = () => {
               handleChange={handleChange}
               handleSubmit={handleSubmit}
               setPhoto={setPhoto}
-              imgProfile={imgProfile}
+              imgProfile={seller && seller.photo ? seller.photo : img}
               seller={seller[0]}
               loading={loading}
             />

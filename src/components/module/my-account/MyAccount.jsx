@@ -6,16 +6,7 @@ import SelectDay from "../../base/select-day/SelectDay";
 import SelectMonth from "../../base/select-mont/SelectMonth";
 import SelectYears from "../../base/select-years/SelectYears";
 
-const MyAccount = ({
-  values,
-  handleChange,
-  handleSubmit,
-  handleBirth,
-  setPhoto,
-  birt,
-  imgProfile,
-  loading,
-}) => {
+const MyAccount = ({ values, handleChange, handleSubmit, handleBirth, setPhoto, birt, imgProfile, loading }) => {
   const [prevImg, setPrevImg] = useState(null);
 
   const handlePhoto = (e) => {
@@ -33,26 +24,15 @@ const MyAccount = ({
     <div className="bg-white lg:w-10/12 mx-auto border border-black rounded-md shadow-lg my-20 w-11/12">
       <div className="p-5">
         <h1 className="text-2xl font-medium">My Profile</h1>
-        <p className="text-sm text-slate-500 mt-2">
-          Manage your profile information
-        </p>
+        <p className="text-sm text-slate-500 mt-2">Manage your profile information</p>
       </div>
       <hr className="w-11/12 mx-auto border-t-2" />
 
       <div className="lg:grid grid-cols-3 gap-5">
         <div className="order-2">
           <div className="border-l-2">
-            <img
-              src={prevImg ? prevImg : imgProfile || img}
-              alt="profil"
-              className="w-24 h-24 rounded-full mx-auto mt-7 object-cover"
-            />
-            <input
-              type="file"
-              className="hidden"
-              id="photos"
-              onChange={handlePhoto}
-            />
+            <img src={prevImg ? prevImg : imgProfile || img} alt="profil" className="w-24 h-24 rounded-full mx-auto mt-7 object-cover" />
+            <input type="file" className="hidden" id="photos" onChange={handlePhoto} />
             <label
               htmlFor="photos"
               className="py-2 border-2 block mx-auto rounded-full mt-5 w-2/5 sm:w-1/4 lg:w-8/12 text-center hover:bg-slate-200 transition-all cursor-pointer"
@@ -110,25 +90,11 @@ const MyAccount = ({
               <p className="lg:ml-8 ">Gender</p>
               <div className="flex gap-8">
                 <div className="flex gap-2">
-                  <input
-                    type="radio"
-                    name="gender"
-                    id="male"
-                    value="laki-laki"
-                    checked={values.gender === "laki-laki"}
-                    onChange={handleChange}
-                  />
+                  <input type="radio" name="gender" id="male" value="laki-laki" checked={values.gender === "laki-laki"} onChange={handleChange} />
                   <label htmlFor="male">Laki-laki</label>
                 </div>
                 <div className="flex gap-2">
-                  <input
-                    type="radio"
-                    name="gender"
-                    id="female"
-                    value="perempuan"
-                    checked={values.gender === "perempuan"}
-                    onChange={handleChange}
-                  />
+                  <input type="radio" name="gender" id="female" value="perempuan" checked={values.gender === "perempuan"} onChange={handleChange} />
                   <label htmlFor="female">Perempuan</label>
                 </div>
               </div>

@@ -6,12 +6,15 @@ import Button from "../../base/button";
 import { useDispatch } from "react-redux";
 import { addOrder } from "../../../config/features/order/orderSlice";
 
-const ModalPayment = ({ visible, onClose, total, delivery, id, toast }) => {
+const ModalPayment = ({ visible, onClose, total, delivery, toast }) => {
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(false);
 
   const data = {
-    customerId: id,
+    order_price: total,
+    delivery_price: delivery,
+    total_price: total + delivery,
+    status: 'unpaid'
   };
   const handleBuy = () => {
     setLoading(true);

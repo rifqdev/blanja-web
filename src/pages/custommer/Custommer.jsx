@@ -54,7 +54,8 @@ const Custommer = () => {
   }, [id, loading, dispatch]);
 
   const handleLogout = () => {
-    localStorage.removeItem("token");
+    localStorage.removeItem("access");
+    localStorage.removeItem("refresh");
     localStorage.removeItem("role");
     navigate("/login");
   };

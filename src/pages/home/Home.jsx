@@ -26,6 +26,12 @@ const Home = () => {
     dispatch(getAllProduct());
     dispatch(getCart(id));
   }, [dispatch, id]);
+  
+  useEffect(() => {
+    if(token){
+      dispatch(getCart(id));
+    }
+  }, [dispatch, id]);
   return (
     <>
       <Navbar />

@@ -45,7 +45,7 @@ const Register = () => {
       };
       setLoading(true);
       if (active) {
-        values.account_type = "custommer";
+        customer.account_type = "custommer";
         dispatch(registerCustomer({ customer, navigate, toast, setLoading }));
       } else {
         values.account_type = "seller";

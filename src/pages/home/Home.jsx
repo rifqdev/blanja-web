@@ -24,9 +24,8 @@ const Home = () => {
     window.scrollTo(0, 0);
     dispatch(getNewProduct());
     dispatch(getAllProduct());
-    dispatch(getCart(id));
   }, [dispatch, id]);
-  
+
   useEffect(() => {
     if(token){
       dispatch(getCart(id));

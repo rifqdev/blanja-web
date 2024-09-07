@@ -17,9 +17,20 @@ export const getAllProduct = createAsyncThunk("product/getAll", async () => {
     console.log(error);
   }
 });
-export const getSearch = createAsyncThunk("product/getSearch", async ({ searchParams, setData, setTotalPage, currentPage, setLoading }) => {
+export const getSearch = createAsyncThunk("product/getSearch", async ({ searchParams, setData, setTotalPage, currentPage, setLoading, price }) => {
   try {
-    const result = await api.get(`/products/search?${searchParams}&page=${currentPage}`);
+    let query = `/products/search?${searchParams}&page=${currentPage}`;
+    if (price) {
+      let sort = null;
+      if(price === 'cheap'){
+        sort ='asc'
+      } else if(price === 'expensive'){
+        sort = 'desc'
+      }
+      query += `&price=${sort}`;
+    }
+
+    const result = await api.get(query);
     setTotalPage(result.data.totalPages);
     setData(result.data.data);
     setLoading(false)

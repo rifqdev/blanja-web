@@ -13,12 +13,13 @@ const Search = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPage, setTotalPage] = useState(0);
   const [loading, setLoading] = useState(true);
+  const [price, setPrice] = useState("null");
 
   const { items } = useSelector((state) => state.product);
 
   useEffect(() => {
-    dispatch(getSearch({ searchParams, setData, setTotalPage, currentPage, setLoading}));
-  }, [searchParams, dispatch, currentPage]);
+    dispatch(getSearch({ searchParams, setData, setTotalPage, currentPage, setLoading, price}));
+  }, [searchParams, dispatch, currentPage, price]);
   const pageNumber = [];
   for (let i = 1; i <= totalPage; i++) {
     pageNumber.push(i);
@@ -31,6 +32,10 @@ const Search = () => {
     setCurrentPage(currentPage + 1);
   };
 
+  const handleSelectChange = (event) => {
+    setPrice(event.target.value); // Ambil nilai yang dipilih dari event
+  };
+  console.log(price)
   return (
     <div>
       <Navbar />
@@ -61,7 +66,18 @@ const Search = () => {
           </div>
         </div>
       ) : (
-        <div className="mt-44 w-11/12 mx-auto">
+        <div className="mt-24 w-11/12 mx-auto">
+          <div className="flex justify-end">
+            <div className="flex gap-3 items-center">
+              <p>Price</p>
+              <select name="Price" className="appearance-none rounded-md row-start-1 col-start-1 bg-slate-150" value={price}
+              onChange={handleSelectChange} >
+                <option value="null">All</option>
+                <option value="cheap">Cheap</option>
+                <option value="expensive">Expensive</option>
+              </select>
+            </div>
+          </div>
           <div
             className="mt-3 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-5"
             data-aos="fade-up"

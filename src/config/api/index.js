@@ -1,10 +1,7 @@
 import axios from "axios";
 
 export const api = axios.create({
-  baseURL: process.env.REACT_APP_REACT_API_BACKEND,
-  headers: {
-    'ngrok-skip-browser-warning': 'true' // Menambahkan header untuk melewati peringatan ngrok
-  }
+  baseURL: process.env.REACT_APP_REACT_API_BACKEND
 });
 
 // Fungsi untuk mendapatkan token baru

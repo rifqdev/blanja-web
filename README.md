@@ -146,7 +146,7 @@ To fix a bug or enhance an existing module, follow these steps:
 
 ## Related Project
 
-**:rocket: [`Demo blanja`](https://olshop-kappa.vercel.app)**
+**:rocket: [`Demo blanja`](https://blanja.rifqidev.my.id)**
 **:rocket: [`Backend Blanja`](https://github.com/rifqiay/olshop-BE)**
 
 ## Contact
